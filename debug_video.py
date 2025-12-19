@@ -35,10 +35,15 @@ def debug_video(video_id: str, max_frames: int = 20):
         print(f"Available videos: {dataset.get_video_ids()}")
         return
     
-    # Get video info
-    video_path = dataset.get_video_path(video_id)
-    reference_images = dataset.get_reference_images(video_id)
-    video_info = get_video_info(video_path)
+    # Get video sample
+    sample = dataset.get_sample(video_id)
+    if sample is None:
+        print(f"❌ Error: Could not load sample for '{video_id}'")
+        return
+    
+    video_path = sample.video_path
+    reference_images = sample.reference_images
+    video_info = get_video_info(str(video_path))
     
     print(f"\n[2/4] Video Info:")
     print(f"  - Video ID: {video_id}")
