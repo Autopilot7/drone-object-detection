@@ -18,6 +18,7 @@ def train_yolo_for_object(
     epochs=50,
     imgsz=640,
     batch_size=16,
+    patience=20,
     device='cuda' if torch.cuda.is_available() else 'cpu',
     project='runs/train',
     name=None
@@ -32,6 +33,7 @@ def train_yolo_for_object(
         epochs: Number of training epochs
         imgsz: Image size
         batch_size: Batch size
+        patience: Early stopping patience (epochs without improvement)
         device: cuda or cpu
         project: Project directory for saving results
         name: Run name (default: object_name)
@@ -47,6 +49,7 @@ def train_yolo_for_object(
     print(f"Epochs: {epochs}")
     print(f"Image size: {imgsz}")
     print(f"Batch size: {batch_size}")
+    print(f"Early stopping patience: {patience} epochs")
     print(f"Device: {device}")
     print(f"{'='*60}\n")
     
@@ -64,7 +67,7 @@ def train_yolo_for_object(
         name=name,
         exist_ok=True,
         # Optimization settings
-        patience=20,  # Early stopping patience
+        patience=patience,  # Early stopping patience
         save=True,
         save_period=10,  # Save checkpoint every N epochs
         # Augmentation (help with small dataset)
@@ -130,6 +133,12 @@ def main():
         default='cuda' if torch.cuda.is_available() else 'cpu',
         help='Device (cuda or cpu)'
     )
+    parser.add_argument(
+        '--patience',
+        type=int,
+        default=20,
+        help='Early stopping patience (default: 20 epochs)'
+    )
     
     args = parser.parse_args()
     
@@ -159,6 +168,7 @@ def main():
                 epochs=args.epochs,
                 imgsz=args.imgsz,
                 batch_size=args.batch_size,
+                patience=args.patience,
                 device=args.device,
                 project='runs/train',
                 name=obj_name

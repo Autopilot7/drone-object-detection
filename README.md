@@ -158,17 +158,12 @@ Output includes:
 - Per-category breakdown
 - Visualization plots
 
-## Citation
 
-```bibtex
-@misc{drone_detection_2025,
-  title={Multi-Approach Drone Object Detection Challenge},
-  year={2025},
-  note={Comprehensive implementation of Traditional CV, Deep Learning, and Hybrid approaches}
-}
-```
+============================================================
+            Approach  Mean ST-IoU  Std ST-IoU  Min ST-IoU  Max ST-IoU  Median ST-IoU
+Deep Learning (clip)     0.051775    0.086118         0.0    0.306028       0.006329
 
-## License
-
-This implementation is for educational and research purposes.
-
+============================================================
+BEST APPROACH: Deep Learning (clip)
+Mean ST-IoU: 0.0518
+============================================================
