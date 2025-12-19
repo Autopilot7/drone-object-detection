@@ -17,15 +17,19 @@ class BBox:
     y1: int
     x2: int
     y2: int
+    confidence: Optional[float] = None  # Optional confidence score
     
     def to_dict(self) -> Dict:
-        return {
+        result = {
             'frame': self.frame,
             'x1': self.x1,
             'y1': self.y1,
             'x2': self.x2,
             'y2': self.y2
         }
+        if self.confidence is not None:
+            result['confidence'] = self.confidence
+        return result
     
     def to_xyxy(self) -> np.ndarray:
         """Return as [x1, y1, x2, y2] array"""
