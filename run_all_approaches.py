@@ -73,7 +73,7 @@ def run_deep_learning(dataset, frame_skip=2, encoder_model="dinov2"):
     
     pipeline = DeepLearningPipeline(
         encoder_model=encoder_model,
-        use_tracking=True,
+        use_tracking=False,  # Disable ByteTrack, use temporal grouping instead
         use_multiscale=False
     )
     
