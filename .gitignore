@@ -28,7 +28,7 @@ observing/
 
 # Output files
 output/
-models/
+/models/
 *.pt
 *.pth
 *.onnx
