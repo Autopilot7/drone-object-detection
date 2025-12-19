@@ -58,12 +58,12 @@ python scripts/train_unified.py \
 
 # Ctrl+B, D to detach
 
-# Step 3: Copy trained model
-mkdir -p models/trained
-cp runs/train_unified/drone_detector/weights/best.pt models/trained/unified.pt
-
-# Step 4: Evaluate
+# Step 3: Evaluate (automatically finds model in runs/)
 python scripts/eval_unified.py --frame-skip 2
+
+# Optional: Copy to models/trained/ for permanent storage
+# mkdir -p models/trained
+# cp runs/train_unified/drone_detector/weights/best.pt models/trained/unified.pt
 ```
 
 ---

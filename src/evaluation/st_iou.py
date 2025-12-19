@@ -253,6 +253,29 @@ def compute_temporal_metrics(
     }
 
 
+def compute_st_iou(
+    ground_truth: List[BBox],
+    predictions: List[BBox],
+    frame_tolerance: int = 0
+) -> float:
+    """
+    Simple wrapper for computing ST-IoU from flat lists of BBox
+    
+    Args:
+        ground_truth: Flat list of ground truth bounding boxes
+        predictions: Flat list of predicted bounding boxes
+        frame_tolerance: Tolerance in frame matching
+        
+    Returns:
+        ST-IoU value
+    """
+    # Treat all boxes as single sequence
+    gt_sequences = [ground_truth] if ground_truth else []
+    pred_sequences = [predictions] if predictions else []
+    
+    return compute_st_iou_video(gt_sequences, pred_sequences, frame_tolerance)
+
+
 def compute_spatial_metrics(
     ground_truth: List[BBox],
     predictions: List[BBox],

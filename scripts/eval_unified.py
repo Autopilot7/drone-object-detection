@@ -164,7 +164,7 @@ def main():
     parser.add_argument(
         '--model',
         type=str,
-        default='models/trained/unified.pt',
+        default='runs/train_unified/drone_detector/weights/best.pt',
         help='Path to unified model'
     )
     parser.add_argument(

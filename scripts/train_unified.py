@@ -182,12 +182,11 @@ def main():
     print("\n" + "="*60)
     print("NEXT STEPS:")
     print("="*60)
-    print("1. Copy model:")
-    print("   mkdir -p models/trained")
-    print("   cp runs/train_unified/drone_detector/weights/best.pt models/trained/unified.pt")
+    print("1. Evaluate (automatically finds the trained model):")
+    print("   python scripts/eval_unified.py --frame-skip 2")
     print("")
-    print("2. Evaluate:")
-    print("   python scripts/eval_unified.py")
+    print("2. Compare with baseline:")
+    print("   python run_all_approaches.py --approaches deep_learning --encoder clip --frame-skip 2")
     print("="*60)
 
 
