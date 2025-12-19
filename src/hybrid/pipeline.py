@@ -11,6 +11,7 @@ from ..utils.bbox_utils import bbox_iou, nms
 from ..traditional.detector import TraditionalDetector
 from ..models.reference_encoder import ReferenceEncoder
 from ..models.tracker import ByteTracker
+from ..config import MAX_FRAME_GAP
 
 
 class HybridPipeline:
@@ -226,7 +227,7 @@ class HybridPipeline:
             all_detections = []
             for seq in sequences:
                 all_detections.extend(seq)
-            sequences = group_detections_into_sequences(all_detections, max_frame_gap=10)
+            sequences = group_detections_into_sequences(all_detections, max_frame_gap=MAX_FRAME_GAP)
         
         print(f"[{video_sample.video_id}] Grouped into {len(sequences)} sequence(s)")
         

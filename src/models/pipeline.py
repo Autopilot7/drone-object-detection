@@ -12,7 +12,7 @@ from .tracker import ByteTracker
 from .reference_encoder import ReferenceEncoder
 from ..config import (
     SIMILARITY_THRESHOLD, CONFIDENCE_THRESHOLD, YOLO_MODEL,
-    TRACK_THRESH, MATCH_THRESH, TRACK_BUFFER
+    TRACK_THRESH, MATCH_THRESH, TRACK_BUFFER, MAX_FRAME_GAP
 )
 
 
@@ -190,7 +190,7 @@ class DeepLearningPipeline:
             all_detections = []
             for seq in sequences:
                 all_detections.extend(seq)
-            sequences = group_detections_into_sequences(all_detections, max_frame_gap=10)
+            sequences = group_detections_into_sequences(all_detections, max_frame_gap=MAX_FRAME_GAP)
         
         print(f"[{video_sample.video_id}] Grouped into {len(sequences)} track(s)")
         

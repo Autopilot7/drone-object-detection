@@ -37,6 +37,7 @@ SIMILARITY_THRESHOLD = 0.3  # For reference image matching (works well with CLIP
 TRACK_BUFFER = 30  # ByteTrack buffer
 TRACK_THRESH = 0.3  # Track confidence threshold (using YOLO confidence only, similarity already filtered)
 MATCH_THRESH = 0.8  # Matching threshold for tracking
+MAX_FRAME_GAP = 50  # Maximum frame gap for temporal grouping (when tracking disabled)
 
 # Evaluation
 ST_IOU_FRAME_TOLERANCE = 0  # Tolerance in frame matching

@@ -10,6 +10,7 @@ from ..data_loader import BBox, VideoSample
 from ..utils.video_utils import extract_frames
 from .detector import TraditionalDetector
 from .temporal_filter import SimpleTracker, group_detections_into_sequences
+from ..config import MAX_FRAME_GAP
 
 
 class TraditionalCVPipeline:
@@ -132,7 +133,7 @@ class TraditionalCVPipeline:
         
         sequences = group_detections_into_sequences(
             all_detections,
-            max_frame_gap=10
+            max_frame_gap=MAX_FRAME_GAP
         )
         
         print(f"[{video_sample.video_id}] Grouped into {len(sequences)} sequences")
