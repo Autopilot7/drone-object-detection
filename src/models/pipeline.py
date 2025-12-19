@@ -10,6 +10,7 @@ from ..utils.video_utils import extract_frames
 from .detector import ReferenceMatchingDetector, MultiScaleDetector
 from .tracker import ByteTracker
 from .reference_encoder import ReferenceEncoder
+from ..config import SIMILARITY_THRESHOLD, CONFIDENCE_THRESHOLD, YOLO_MODEL
 
 
 class DeepLearningPipeline:
@@ -19,12 +20,12 @@ class DeepLearningPipeline:
     
     def __init__(
         self,
-        yolo_model: str = "yolov8x.pt",
+        yolo_model: str = None,
         encoder_model: str = "dinov2",
         use_tracking: bool = True,
         use_multiscale: bool = False,
-        similarity_threshold: float = 0.7,
-        confidence_threshold: float = 0.3,
+        similarity_threshold: float = None,
+        confidence_threshold: float = None,
         device: Optional[str] = None
     ):
         """
@@ -41,6 +42,11 @@ class DeepLearningPipeline:
         """
         self.use_tracking = use_tracking
         self.use_multiscale = use_multiscale
+        
+        # Use config values as defaults
+        similarity_threshold = similarity_threshold if similarity_threshold is not None else SIMILARITY_THRESHOLD
+        confidence_threshold = confidence_threshold if confidence_threshold is not None else CONFIDENCE_THRESHOLD
+        yolo_model = yolo_model or YOLO_MODEL
         
         # Initialize detector
         self.detector = ReferenceMatchingDetector(

@@ -8,7 +8,7 @@ sys.path.append(str(Path(__file__).parent))
 
 from src.data_loader import DroneDataset
 from src.traditional.pipeline import TraditionalCVPipeline
-from src.config import DATA_ROOT
+from src.config import DATA_ROOT, CONFIDENCE_THRESHOLD
 from src.utils.video_utils import get_video_info
 
 print("="*70)
@@ -40,10 +40,10 @@ print(f"  - Estimated time: {estimated_time//60} min {estimated_time%60} sec")
 
 # Create pipeline
 print(f"\n[4/5] Initializing Traditional CV pipeline (SIFT)...")
+print(f"  - Confidence threshold: {CONFIDENCE_THRESHOLD}")
 pipeline = TraditionalCVPipeline(
     feature_type="SIFT",
-    use_tracking=True,
-    confidence_threshold=0.3
+    use_tracking=True
 )
 print("✓ Pipeline ready")
 

@@ -14,7 +14,10 @@ from src.evaluation.compare import ResultsComparator
 from src.traditional.pipeline import TraditionalCVPipeline
 from src.models.pipeline import DeepLearningPipeline
 from src.hybrid.pipeline import HybridPipeline
-from src.config import DATA_ROOT, OUTPUT_DIR
+from src.config import (
+    DATA_ROOT, OUTPUT_DIR, 
+    YOLO_MODEL, SIMILARITY_THRESHOLD, CONFIDENCE_THRESHOLD
+)
 
 
 def run_traditional_cv(dataset, frame_skip=2):
@@ -53,19 +56,25 @@ def run_traditional_cv(dataset, frame_skip=2):
     return predictions_dict
 
 
-def run_deep_learning(dataset, frame_skip=2):
-    """Run deep learning approach"""
+def run_deep_learning(dataset, frame_skip=2, encoder_model="dinov2"):
+    """Run deep learning approach
+    
+    Args:
+        dataset: Dataset to process
+        frame_skip: Frame skip interval
+        encoder_model: Encoder model to use ("dinov2" or "clip")
+    """
     print("\n" + "="*60)
     print("APPROACH A: DEEP LEARNING (SOTA)")
     print("="*60)
+    print(f"Encoder: {encoder_model}")
+    print(f"Similarity Threshold: {SIMILARITY_THRESHOLD}")
+    print(f"Confidence Threshold: {CONFIDENCE_THRESHOLD}")
     
     pipeline = DeepLearningPipeline(
-        yolo_model="yolov8x.pt",
-        encoder_model="dinov2",
+        encoder_model=encoder_model,
         use_tracking=True,
-        use_multiscale=False,
-        similarity_threshold=0.7,
-        confidence_threshold=0.3
+        use_multiscale=False
     )
     
     # Process dataset
@@ -172,6 +181,9 @@ def main():
                        choices=["traditional", "deep_learning", "hybrid", "all"],
                        default=["all"],
                        help="Which approaches to run")
+    parser.add_argument("--encoder", type=str, default="dinov2",
+                       choices=["dinov2", "clip"],
+                       help="Encoder model for deep learning (default: dinov2)")
     parser.add_argument("--data-root", type=str, default=str(DATA_ROOT),
                        help="Path to data root")
     
@@ -202,8 +214,8 @@ def main():
     
     if "deep_learning" in run_approaches:
         try:
-            predictions = run_deep_learning(dataset, args.frame_skip)
-            all_predictions["Deep Learning"] = predictions
+            predictions = run_deep_learning(dataset, args.frame_skip, args.encoder)
+            all_predictions[f"Deep Learning ({args.encoder})"] = predictions
         except Exception as e:
             print(f"Error running deep learning: {e}")
             import traceback

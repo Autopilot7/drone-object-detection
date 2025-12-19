@@ -10,6 +10,7 @@ from PIL import Image
 from .reference_encoder import ReferenceEncoder
 from ..data_loader import BBox
 from ..utils.bbox_utils import nms, clip_bbox
+from ..config import SIMILARITY_THRESHOLD, CONFIDENCE_THRESHOLD, YOLO_MODEL
 
 
 class YOLODetector:
@@ -93,10 +94,10 @@ class ReferenceMatchingDetector:
     
     def __init__(
         self,
-        yolo_model: str = "yolov8x.pt",
+        yolo_model: str = None,
         encoder_model: str = "dinov2",
-        similarity_threshold: float = 0.7,
-        confidence_threshold: float = 0.3,
+        similarity_threshold: float = None,
+        confidence_threshold: float = None,
         device: Optional[str] = None
     ):
         """
@@ -110,8 +111,9 @@ class ReferenceMatchingDetector:
             device: Device to use
         """
         self.device = device or ('cuda' if torch.cuda.is_available() else 'cpu')
-        self.similarity_threshold = similarity_threshold
-        self.confidence_threshold = confidence_threshold
+        self.similarity_threshold = similarity_threshold if similarity_threshold is not None else SIMILARITY_THRESHOLD
+        self.confidence_threshold = confidence_threshold if confidence_threshold is not None else CONFIDENCE_THRESHOLD
+        yolo_model = yolo_model or YOLO_MODEL
         
         # Initialize components
         self.yolo_detector = YOLODetector(yolo_model, confidence_threshold, device)

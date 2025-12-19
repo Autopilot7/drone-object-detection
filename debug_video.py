@@ -8,19 +8,20 @@ import cv2
 
 from src.data_loader import DroneDataset
 from src.models.pipeline import DeepLearningPipeline
-from src.config import DATA_ROOT
+from src.config import DATA_ROOT, SIMILARITY_THRESHOLD, CONFIDENCE_THRESHOLD
 from src.utils.video_utils import get_video_info, extract_frame_at_index
 
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 
-def debug_video(video_id: str, max_frames: int = 20):
+def debug_video(video_id: str, max_frames: int = 20, encoder: str = "dinov2"):
     """
     Debug a video by processing first N frames with detailed logging
     
     Args:
         video_id: Video ID to debug
         max_frames: Maximum number of frames to process
+        encoder: Encoder model to use ("dinov2" or "clip")
     """
     print("=" * 70)
     print(f"DEBUG VIDEO: {video_id}")
@@ -54,9 +55,12 @@ def debug_video(video_id: str, max_frames: int = 20):
     
     # Initialize pipeline
     print(f"\n[3/4] Initializing Deep Learning pipeline...")
+    print(f"  - Encoder: {encoder}")
+    print(f"  - Similarity threshold: {SIMILARITY_THRESHOLD}")
+    print(f"  - Confidence threshold: {CONFIDENCE_THRESHOLD}")
+    
     pipeline = DeepLearningPipeline(
-        similarity_threshold=0.3,  # Current threshold
-        confidence_threshold=0.3,
+        encoder_model=encoder,
         use_tracking=False  # Disable tracking for debugging
     )
     
@@ -130,8 +134,15 @@ if __name__ == "__main__":
         default=20,
         help="Maximum number of frames to process (default: 20)"
     )
+    parser.add_argument(
+        "--encoder",
+        type=str,
+        default="dinov2",
+        choices=["dinov2", "clip"],
+        help="Encoder model to use (default: dinov2)"
+    )
     
     args = parser.parse_args()
     
-    debug_video(args.video_id, args.max_frames)
+    debug_video(args.video_id, args.max_frames, args.encoder)
 
