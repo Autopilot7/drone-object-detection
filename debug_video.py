@@ -47,7 +47,7 @@ def debug_video(video_id: str, max_frames: int = 20):
     
     print(f"\n[2/4] Video Info:")
     print(f"  - Video ID: {video_id}")
-    print(f"  - Total frames: {video_info['total_frames']}")
+    print(f"  - Total frames: {video_info['frame_count']}")
     print(f"  - Resolution: {video_info['width']}x{video_info['height']}")
     print(f"  - FPS: {video_info['fps']:.1f}")
     print(f"  - Reference images: {len(reference_images)}")
@@ -73,7 +73,7 @@ def debug_video(video_id: str, max_frames: int = 20):
     processed = 0
     total_detections = 0
     
-    while frame_idx < video_info['total_frames'] and processed < max_frames:
+    while frame_idx < video_info['frame_count'] and processed < max_frames:
         ret, frame = cap.read()
         if not ret:
             break
