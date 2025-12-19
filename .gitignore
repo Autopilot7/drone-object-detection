@@ -35,6 +35,7 @@ output/
 
 # YOLO training outputs
 yolo_datasets/
+yolo_unified/
 runs/
 
 # Logs
