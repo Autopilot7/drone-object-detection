@@ -31,7 +31,7 @@ RANSAC_THRESHOLD = 5.0
 # Detection settings
 CONFIDENCE_THRESHOLD = 0.5
 NMS_IOU_THRESHOLD = 0.5
-SIMILARITY_THRESHOLD = 0.7  # For reference image matching
+SIMILARITY_THRESHOLD = 0.1  # For reference image matching
 
 # Tracking settings
 TRACK_BUFFER = 30  # ByteTrack buffer
