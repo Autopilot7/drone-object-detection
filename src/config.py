@@ -29,13 +29,13 @@ MIN_MATCH_COUNT = 10  # Minimum matches for valid detection
 RANSAC_THRESHOLD = 5.0
 
 # Detection settings
-CONFIDENCE_THRESHOLD = 0.5
+CONFIDENCE_THRESHOLD = 0.3  # Lowered to detect smaller/distant objects
 NMS_IOU_THRESHOLD = 0.5
-SIMILARITY_THRESHOLD = 0.1  # For reference image matching
+SIMILARITY_THRESHOLD = 0.3  # For reference image matching (works well with CLIP)
 
 # Tracking settings
 TRACK_BUFFER = 30  # ByteTrack buffer
-TRACK_THRESH = 0.6  # Track confidence threshold
+TRACK_THRESH = 0.15  # Track confidence threshold (for combined YOLO*similarity scores)
 MATCH_THRESH = 0.8  # Matching threshold for tracking
 
 # Evaluation

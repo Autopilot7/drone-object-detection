@@ -10,7 +10,10 @@ from ..utils.video_utils import extract_frames
 from .detector import ReferenceMatchingDetector, MultiScaleDetector
 from .tracker import ByteTracker
 from .reference_encoder import ReferenceEncoder
-from ..config import SIMILARITY_THRESHOLD, CONFIDENCE_THRESHOLD, YOLO_MODEL
+from ..config import (
+    SIMILARITY_THRESHOLD, CONFIDENCE_THRESHOLD, YOLO_MODEL,
+    TRACK_THRESH, MATCH_THRESH, TRACK_BUFFER
+)
 
 
 class DeepLearningPipeline:
@@ -67,9 +70,9 @@ class DeepLearningPipeline:
         # Initialize tracker
         if use_tracking:
             self.tracker = ByteTracker(
-                track_thresh=0.6,
-                match_thresh=0.8,
-                track_buffer=30
+                track_thresh=TRACK_THRESH,
+                match_thresh=MATCH_THRESH,
+                track_buffer=TRACK_BUFFER
             )
     
     def process_video(
