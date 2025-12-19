@@ -13,7 +13,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.data_loader import DroneDataset, BBox
-from src.evaluation.st_iou import compute_st_iou
+from src.evaluation.st_iou import compute_st_iou_video
 from src.utils.video_utils import extract_frames
 
 
@@ -137,9 +137,13 @@ def evaluate_unified_model(
         print(f"  Predictions: {len(predictions)} detections")
         
         # Compute ST-IoU
-        st_iou = compute_st_iou(
-            ground_truth=sample.annotations,
-            predictions=predictions
+        # sample.annotations is already List[List[BBox]] (sequences)
+        # predictions is List[BBox], wrap as single sequence
+        pred_sequences = [predictions] if predictions else []
+        
+        st_iou = compute_st_iou_video(
+            ground_truth_sequences=sample.annotations,
+            predicted_sequences=pred_sequences
         )
         
         print(f"  ST-IoU: {st_iou:.4f}")
