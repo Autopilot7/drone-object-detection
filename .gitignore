@@ -33,6 +33,10 @@ output/
 *.pth
 *.onnx
 
+# YOLO training outputs
+yolo_datasets/
+runs/
+
 # Logs
 *.log
 logs/
