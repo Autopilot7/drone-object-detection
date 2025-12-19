@@ -131,13 +131,15 @@ class ReferenceMatchingDetector:
     
     def detect_in_frame(
         self,
-        frame: np.ndarray
+        frame: np.ndarray,
+        debug: bool = False
     ) -> Tuple[List[np.ndarray], List[float]]:
         """
         Detect target object in frame
         
         Args:
             frame: Input frame (RGB)
+            debug: Enable debug logging
             
         Returns:
             Tuple of (bboxes, confidences)
@@ -147,6 +149,10 @@ class ReferenceMatchingDetector:
         
         # Detect all objects with YOLO
         all_bboxes, all_confidences = self.yolo_detector.detect_all_objects(frame)
+        
+        # DEBUG: Log raw YOLO detections
+        if debug:
+            print(f"    [DEBUG] YOLO detected {len(all_bboxes)} objects (conf > {self.confidence_threshold})")
         
         if len(all_bboxes) == 0:
             return [], []
@@ -162,8 +168,22 @@ class ReferenceMatchingDetector:
         
         similarities = np.array(similarities)
         
+        # DEBUG: Log similarity statistics
+        if debug and len(similarities) > 0:
+            print(f"    [DEBUG] Similarities: min={similarities.min():.3f}, max={similarities.max():.3f}, mean={similarities.mean():.3f}")
+            # Show top 3 similarities
+            top_k = min(3, len(similarities))
+            top_indices = np.argsort(similarities)[-top_k:][::-1]
+            top_sims = similarities[top_indices]
+            print(f"    [DEBUG] Top {top_k} similarities: {[f'{s:.3f}' for s in top_sims]}")
+            print(f"    [DEBUG] Threshold: {self.similarity_threshold}")
+        
         # Filter by similarity threshold
         matched_indices = np.where(similarities >= self.similarity_threshold)[0]
+        
+        # DEBUG: Log filtering results
+        if debug:
+            print(f"    [DEBUG] Objects passing threshold: {len(matched_indices)}/{len(all_bboxes)}")
         
         if len(matched_indices) == 0:
             return [], []
@@ -247,13 +267,15 @@ class MultiScaleDetector:
     
     def detect_in_frame(
         self,
-        frame: np.ndarray
+        frame: np.ndarray,
+        debug: bool = False
     ) -> Tuple[List[np.ndarray], List[float]]:
         """
         Detect at multiple scales
         
         Args:
             frame: Input frame
+            debug: Enable debug logging
             
         Returns:
             Tuple of (bboxes, confidences)
@@ -272,7 +294,7 @@ class MultiScaleDetector:
             scaled_frame = cv2.resize(frame, (new_w, new_h))
             
             # Detect
-            bboxes, confidences = self.base_detector.detect_in_frame(scaled_frame)
+            bboxes, confidences = self.base_detector.detect_in_frame(scaled_frame, debug=debug)
             
             # Scale bboxes back to original size
             for bbox, conf in zip(bboxes, confidences):

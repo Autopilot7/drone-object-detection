@@ -116,12 +116,18 @@ class DeepLearningPipeline:
         for frame_idx, frame in frame_iterator:
             processed_frames += 1
             
+            # Enable debug for first 10 frames to see what's happening
+            debug_mode = (processed_frames <= 10)
+            
+            if debug_mode:
+                print(f"\n  [Frame {frame_idx}]")
+            
             # Log progress every 100 frames
             if processed_frames % 100 == 0:
                 print(f"[{video_sample.video_id}] Processed {processed_frames}/{frames_to_process} frames ({100*processed_frames//frames_to_process}%) - Detections: {detection_count}")
             
             # Detect in frame
-            bboxes, confidences = self.detector.detect_in_frame(frame)
+            bboxes, confidences = self.detector.detect_in_frame(frame, debug=debug_mode)
             
             if bboxes:
                 detection_count += len(bboxes)
