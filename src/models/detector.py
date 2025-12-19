@@ -192,9 +192,10 @@ class ReferenceMatchingDetector:
         
         # Get matched detections
         matched_bboxes = [all_bboxes[i] for i in matched_indices]
-        # Combine YOLO confidence and similarity
+        # Use YOLO confidence directly (similarity already filtered)
+        # Multiplication makes confidence too low for tracking
         matched_confidences = [
-            (all_confidences[i] * similarities[i]) 
+            all_confidences[i]  # Use YOLO conf only
             for i in matched_indices
         ]
         
