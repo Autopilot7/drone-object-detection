@@ -136,6 +136,17 @@ def evaluate_unified_model(
         
         print(f"  Predictions: {len(predictions)} detections")
         
+        # Debug: Show frame distribution
+        if predictions:
+            pred_frames = sorted(set(p.frame for p in predictions))
+            gt_frames = sorted(set(bbox.frame for seq in sample.annotations for bbox in seq))
+            print(f"  GT frames: {gt_frames[:10]}{'...' if len(gt_frames) > 10 else ''}")
+            print(f"  Pred frames (sample): {pred_frames[:10]}{'...' if len(pred_frames) > 10 else ''}")
+            
+            # Check frame overlap
+            overlap = set(pred_frames) & set(gt_frames)
+            print(f"  Frame overlap: {len(overlap)}/{len(gt_frames)} GT frames")
+        
         # Compute ST-IoU
         # sample.annotations is already List[List[BBox]] (sequences)
         # predictions is List[BBox], wrap as single sequence
