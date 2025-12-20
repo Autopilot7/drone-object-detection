@@ -101,9 +101,12 @@ def prepare_unified_dataset(data_root, output_root):
     }
     
     # Create output directories
-    for split in ['train', 'val']:
-        (output_root / 'images' / split).mkdir(parents=True, exist_ok=True)
-        (output_root / 'labels' / split).mkdir(parents=True, exist_ok=True)
+    # Only train set (using all data for training)
+    (output_root / 'images' / 'train').mkdir(parents=True, exist_ok=True)
+    (output_root / 'labels' / 'train').mkdir(parents=True, exist_ok=True)
+    # Create empty val set (YOLO requires it)
+    (output_root / 'images' / 'val').mkdir(parents=True, exist_ok=True)
+    (output_root / 'labels' / 'val').mkdir(parents=True, exist_ok=True)
     
     # Load annotations
     annotations_path = data_root / "annotations" / "annotations.json"
@@ -149,9 +152,10 @@ def prepare_unified_dataset(data_root, output_root):
             print(f"  Warning: Missing videos for {obj_name}")
             continue
         
-        # Process train (video_0) and val (video_1)
-        for idx, split in [(0, 'train'), (1, 'val')]:
-            print(f"\n  [{split.upper()}] {obj_name}_{idx}")
+        # Process BOTH video_0 and video_1 for training
+        # (Using all data for training experiment)
+        for idx, split in [(0, 'train'), (1, 'train')]:  # Both go to train!
+            print(f"\n  [{split.upper()}] Processing {obj_name}_{idx}")
             
             video_path = data_root / "samples" / f"{obj_name}_{idx}" / "drone_video.mp4"
             if not video_path.exists():
@@ -189,14 +193,17 @@ def prepare_unified_dataset(data_root, output_root):
     
     # Create data.yaml
     yaml_path = output_root / 'data.yaml'
-    yaml_content = f"""# Unified YOLO dataset for all objects
+    yaml_content = f"""# Unified YOLO dataset for all objects (ALL DATA for training)
 path: {output_root.absolute()}
 train: images/train
-val: images/val
+val: images/train  # Using train for val (no separate val set)
 
 # Classes
 nc: {len(OBJECT_CLASSES)}
 names: {list(OBJECT_CLASSES.keys())}
+
+# Note: This uses ALL data (video_0 + video_1) for training
+# Evaluation is still done on video_1 separately
 """
     with open(yaml_path, 'w') as f:
         f.write(yaml_content)
@@ -204,11 +211,13 @@ names: {list(OBJECT_CLASSES.keys())}
     print("\n" + "="*60)
     print("DATASET PREPARATION COMPLETE!")
     print("="*60)
-    print(f"Train frames: {stats['train']}")
-    print(f"Val frames: {stats['val']}")
-    print(f"Total: {stats['train'] + stats['val']}")
+    print(f"Train frames: {stats['train']} (ALL DATA - video_0 + video_1)")
+    print(f"Val frames: {stats['val']} (not used)")
+    print(f"Total: {stats['train']}")
     print(f"\nClasses: {list(OBJECT_CLASSES.keys())}")
     print(f"Config: {yaml_path}")
+    print("\nNOTE: Using ALL data for training (both video_0 and video_1)")
+    print("      Evaluation still done separately on video_1")
     print("="*60)
 
 
